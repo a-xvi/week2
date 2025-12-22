@@ -5,13 +5,16 @@ from bootcamp_data.transform import enforce_schema
 
 ROOT = Path(__file__).resolve().parent.parent
 
-print(make_paths(ROOT))
 
+def main():
+    print(make_paths(ROOT))
+    df= pd.read_csv("orders.csv")
+    print(df)
 
+    df = enforce_schema(df)
+    print("\n after enforce\n")
+    print(df)
 
-df= pd.read_csv("orders.csv")
-print(df)
+if __name__ == "__main__":
+    main()
 
-df = enforce_schema(df)
-print("\n after enforce\n")
-print(df)

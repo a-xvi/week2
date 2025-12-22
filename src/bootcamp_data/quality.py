@@ -1,6 +1,6 @@
 import pandas as pd
 
-def require_columns(df:pd.DateFrame , cols:list[str]) -> None:
+def require_columns(df:pd.DataFrame , cols:list[str]) -> None:
     missing=[
         c for c in cols if c not in df.columns
     ]
@@ -9,7 +9,7 @@ def require_columns(df:pd.DateFrame , cols:list[str]) -> None:
    
    
 def assert_non_empty(df:pd.DataFrame, name="df") -> None:
-    assert df.empty, f"{name} is empty"
+    assert len(df)> 0, f"{name} is empty"
     
 def assert_unique_key(df:pd.DataFrame, key:str,allow_na=False) -> None:
     

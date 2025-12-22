@@ -21,7 +21,7 @@ def missingness_report(df:pd.DataFrame) -> pd.DataFrame:
         .sort_values("p_missing", ascending=False)
     )
     
-def add_missing_flag(df:pd.DataFrame, cols:list[str]) -> pd.DataFrame:
+def add_missing_flags(df:pd.DataFrame, cols:list[str]) -> pd.DataFrame:
     out=df.copy()
     
     for c in cols:
