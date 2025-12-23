@@ -1,5 +1,37 @@
 import pandas as pd 
 import re
+
+
+def parse_datetime(df:pd.DataFrame,column:str,utc=False) -> pd.DataFrame:
+    df[column]=pd.to_datetime(df[column],errors="coerce",utc=utc)
+    return df
+
+def add_time_parts (df:pd.DataFrame ,ts_column:str) -> pd.DataFrame:
+    ts = df[ts_column]
+    df["date"] = ts.dt.date
+    df["year"] = ts.dt.year
+    df["month"] = ts.dt.month
+    df["day"] = ts.dt.day_name()
+    df["hour"] = ts.dt.hour
+    return df
+
+def iqr_bounds(df:pd.DataFrame, col:str) -> tuple[float, float]:
+    df = df.dropna(subset=[col])
+    q1 = df[col].quantile(0.25)
+    q3 = df[col].quantile(0.75)
+    
+    IQR = q3-q1
+    
+    low= q1 - 1.5 * IQR
+    high= q3 + 1.5 * IQR
+    
+    return q1,q3
+  
+def winsorize_iqr(s:pd.Series) -> pd.Series:
+    low,high=iqr_bounds(pd.DataFrame({"x":s}),"x")
+    
+    return s.clip(lower=low,upper=high)
+
 def enforce_schema(df: pd.DataFrame) -> pd.DataFrame:
     return df.assign(
         order_id=df["order_id"].astype("string"),
@@ -50,3 +82,6 @@ def dedupe_keep_latest(df:pd.DataFrame, key_cols:list[str], ts_col:str)-> pd.Dat
     )
     
     
+
+
+
