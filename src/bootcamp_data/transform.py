@@ -32,6 +32,10 @@ def winsorize_iqr(s:pd.Series) -> pd.Series:
     
     return s.clip(lower=low,upper=high)
 
+def add_outlier_flag(df: pd.DataFrame, col: str, *, k: float = 1.5) -> pd.DataFrame:
+    lo, hi = iqr_bounds(df,col)
+    return df.assign(**{f"{col}_is_outlier": (df[col] < lo) | (df[col] > hi)})
+
 def enforce_schema(df: pd.DataFrame) -> pd.DataFrame:
     return df.assign(
         order_id=df["order_id"].astype("string"),

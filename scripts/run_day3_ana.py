@@ -1,7 +1,7 @@
 from __future__ import annotations
 from pathlib import Path
 import pandas as pd
-from bootcamp_data.transform import parse_datetime,add_time_parts,iqr_bounds,winsorize_iqr
+from bootcamp_data.transform import parse_datetime,add_time_parts,iqr_bounds,winsorize_iqr, add_outlier_flag    
 from bootcamp_data.joins import safe_left_join
 
 orders = pd.read_csv("orders.csv")
@@ -15,7 +15,8 @@ def main():
 
     orders_parsed = parse_datetime(orders,"created_at",utc=True)
     orders_parsed = add_time_parts(orders_parsed,"created_at")
-    
+    orders_parsed = add_outlier_flag(orders_parsed, "amount")
+
     lower, upper = iqr_bounds(orders_parsed,"amount")
     print(f"\nIQR bounds for amount:\n {lower} - {upper}")
     print("*"*100)
